@@ -22,6 +22,9 @@ These are all the algorithms with magic hashes:
 - [MD2](md2.md)
 - [MD4](md4.md)
 - [MD5](md5.md)
+- [MurmurHash3_x86_32/Murmur3a](murmur3a.md)
+- [MurmurHash3_x86_128/Murmur3c](murmur3c.md)
+- [MurmurHash3_x64_128/Murmur3f](murmur3f.md)
 - [PHOTON-80/20/16](photon-80-20-16.md)
 - [PHOTON-128/16/16](photon-128-16-16.md)
 - [PHOTON-160/36/36](photon-160-36-36.md)
@@ -40,6 +43,10 @@ These are all the algorithms with magic hashes:
 - [Tiger/160,3](tiger160,3.md)
 - [Tiger/160,4](tiger160,4.md)
 - [Tiger/192,3](tiger192,3.md)
+- [xxHash-XXH32](xxh32.md)
+- [xxHash-XXH64](xxh64.md)
+- [xxHash-XXH3_64bits](xxh3.md)
+- [xxHash-XXH3_128bits](xxh128.md)
 
 To quote @0xb0bb, "there are other applications for magic hashes other than password comparisons (such as caching layers or data derived from the output of a hash function) where these known insecure, lesser known and pseudo-hash algorithms can be found more readily."
 
@@ -79,8 +86,21 @@ It all started with [this tweet](https://twitter.com/spazef0rze/status/439352552
 - PHOTON-80/20/16, PHOTON-128/16/16, PHOTON-160/36/36 by [Norbert Tihanyi & Bertalan Borsos](https://twitter.com/TihanyiNorbert/status/1358431849568030721)
 - u-Quark-136 by [Norbert Tihanyi & Bertalan Borsos](https://twitter.com/TihanyiNorbert/status/1358431849568030721)
 - SPONGENT-88/80/8, SPONGENT-88/176/88, SPONGENT-128/128/8, SPONGENT-128/256/128 by [Norbert Tihanyi & Bertalan Borsos](https://twitter.com/TihanyiNorbert/status/1358431849568030721)
+- xxHash by me ([#27](https://github.com/spaze/hashes/pull/27))
+- MurmurHash3 by me ([#28](https://github.com/spaze/hashes/pull/28))
 
 ### How to calculate your own
 I've used my laptop, few `for` (or `foreach`?) loops, many CPU cycles and [an external fan](https://twitter.com/spazef0rze/status/1150086642113437697) back in 2014 but today you can/should use a GPU and a modified hashcat for that. See [this write-up](https://grocid.net/2019/08/03/finding-magic-hashes-with-hashcat/) by [Carl Löndahl](https://twitter.com/carllondahl) and [0xb0bb](https://twitter.com/0xb0bb).
 
 Chick3nman & co. is also [working](https://twitter.com/Chick3nman512/status/1157748868823621638) on their version of hashcat, stay tuned.
+
+# Real collisions
+If you need a _real_ alphanumerical collision, here's a [72-byte alphanum MD5 collision](https://twitter.com/realhashbreaker/status/1770161965006008570) with 1-byte difference, 1-bit even, by Marc Stevens:
+```
+md5("TEXTCOLLBYfGiJUETHQ4hAcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak")
+=
+md5("TEXTCOLLBYfGiJUETHQ4hEcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak")
+```
+Note that if you register with the first password, and log in with the second, it may still mean that the site uses `bcrypt(md5($password))`, not just `md5($password)`. Such hash wrapping is sometimes used when [upgrading password hashing](https://www.michalspacek.com/upgrading-existing-password-hashes) but it should be used only temporarily.
+
+See Marc's [Project HashClash](https://github.com/cr-marcstevens/hashclash) if you're interested in these _real_ collisions or if you'd like to [create your own](https://github.com/cr-marcstevens/hashclash?tab=readme-ov-file#create-you-own-text-identical-prefix-collision).
