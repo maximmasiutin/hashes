@@ -91,12 +91,14 @@ It all started with [this tweet](https://twitter.com/spazef0rze/status/439352552
 - xxHash by me ([#27](https://github.com/spaze/hashes/pull/27))
 - MurmurHash3 by me ([#28](https://github.com/spaze/hashes/pull/28))
 
-### How to calculate your own
+### How to calculate your own magic hashes
 I've used my laptop, few `for` (or `foreach`?) loops, many CPU cycles and [an external fan](https://twitter.com/spazef0rze/status/1150086642113437697) back in 2014 but today you can/should use a GPU and a modified hashcat for that. See [this write-up](https://grocid.net/2019/08/03/finding-magic-hashes-with-hashcat/) by [Carl Löndahl](https://twitter.com/carllondahl) and [0xb0bb](https://twitter.com/0xb0bb).
 
 Chick3nman & co. is also [working](https://twitter.com/Chick3nman512/status/1157748868823621638) on their version of hashcat, stay tuned.
 
 # Real collisions
+
+## [MD5](md5-real.md)
 If you need a _real_ alphanumerical collision, here's a [72-byte alphanum MD5 collision](https://twitter.com/realhashbreaker/status/1770161965006008570) with 1-byte difference, 1-bit even, by Marc Stevens:
 ```
 md5("TEXTCOLLBYfGiJUETHQ4hAcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak")
@@ -106,3 +108,12 @@ md5("TEXTCOLLBYfGiJUETHQ4hEcKSMd5zYpgqf1YRDhkmxHkhPWptrkoyz28wnI9V0aHeAuaKnak")
 Note that if you register with the first password, and log in with the second, it may still mean that the site uses `bcrypt(md5($password))`, not just `md5($password)`. Such hash wrapping is sometimes used when [upgrading password hashing](https://www.michalspacek.com/upgrading-existing-password-hashes) but it should be used only temporarily.
 
 See Marc's [Project HashClash](https://github.com/cr-marcstevens/hashclash) if you're interested in these _real_ collisions or if you'd like to [create your own](https://github.com/cr-marcstevens/hashclash?tab=readme-ov-file#create-you-own-text-identical-prefix-collision).
+
+## [LM](lm-real.md)
+Real LM hash collisions by @solardiz (#35, thanks!):
+- *LM half-hash*: *plaintext1* or *plaintext2*
+- `db82323cb0693862`: `2275490` or `0/*LUZ@`
+- `44b3b60db75c15c1`: `2716388` or `1}DC<XT`
+- `585e239d32df1998`: `8351762` or `$;)5D|X`
+
+See [the tweet](https://x.com/solardiz/status/1903527938747670746) how to generate some more.
